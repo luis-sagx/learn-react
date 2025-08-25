@@ -1,6 +1,6 @@
 import { useMemo } from "react"
 
-export default function Header({cart, removeFromCart}){
+export default function Header({cart, removeFromCart, increaseQuantity, decreaseQuantity, cleanCart}){
 
     //state derivado 
     const isEmpty = useMemo(() => cart.length === 0, [cart])
@@ -13,13 +13,13 @@ export default function Header({cart, removeFromCart}){
                 <div className="row justify-content-center justify-content-md-between">
                     <div className="col-8 col-md-3">
                         <a href="index.html" className="logo-container">
-                            <img className="img-fluid logo-img" src="./public/img/logo-lml.png" alt="imagen logo" />
+                            <img className="img-fluid logo-img" src="./img/logo-lml.png" alt="imagen logo" />
                             <h3>Guitar LML</h3>
                         </a>
                     </div>
                     <aside className="col-md-6 a mt-5 d-flex align-items-start justify-content-end">
                         <div className="carrito">
-                            <img className="img-fluid" src="./public/img/carrito.png" alt="imagen carrito" />
+                            <img className="img-fluid" src="./img/carrito.png" alt="imagen carrito" />
 
                             <div id="carrito" className="bg-white p-3">
                                 {isEmpty ? (
@@ -50,6 +50,7 @@ export default function Header({cart, removeFromCart}){
                                                         <button
                                                             type="button"
                                                             className="btn btn-dark"
+                                                            onClick={() => decreaseQuantity(guitar.id)}
                                                         >
                                                             -
                                                         </button>
@@ -57,6 +58,7 @@ export default function Header({cart, removeFromCart}){
                                                         <button
                                                             type="button"
                                                             className="btn btn-dark"
+                                                            onClick={() => increaseQuantity(guitar.id)}
                                                         >
                                                             +
                                                         </button>
@@ -76,7 +78,7 @@ export default function Header({cart, removeFromCart}){
                                     </table>
 
                                     <p className="text-end">Total pagar: <span className="fw-bold">${getTotal}</span></p>
-                                    <button className="btn btn-dark w-100 mt-3 p-2">Vaciar Carrito</button>
+                                    <button className="btn btn-dark w-100 mt-3 p-2" onClick={() => cleanCart()}>Vaciar Carrito</button>
                                     </>
                                 )}
                             </div>
