@@ -3,9 +3,11 @@ import MenuItem from './components/MenuItem'
 import useOrder from './hooks/useOrder'
 import './App.css'
 import OrderComponent from './components/OrderComponent'
+import OrderTotals from './components/OrderTotals'
+import TipPercentageForm from './components/TipPercentageForm'
 
 function App() {
-  const { order, addToOrder } = useOrder()
+  const { order, addToOrder, removeFromOrder, tip, setTip } = useOrder()
 
   return (
     <>
@@ -28,6 +30,16 @@ function App() {
       <div className='border border-dashed border-pink-700 p-5 rounded-lg space-y-10'>
           <OrderComponent 
             order={order} 
+            removeFromOrder={removeFromOrder}
+          />
+
+          <TipPercentageForm 
+            setTip={setTip}
+          />
+
+          <OrderTotals 
+            order={order}
+            tip={tip}
           />
       </div>
     </main>
