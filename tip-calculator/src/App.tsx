@@ -7,7 +7,7 @@ import OrderTotals from './components/OrderTotals'
 import TipPercentageForm from './components/TipPercentageForm'
 
 function App() {
-  const { order, addToOrder, removeFromOrder, tip, setTip } = useOrder()
+  const { order, addToOrder, removeFromOrder, tip, setTip, placeOrder } = useOrder()
 
   return (
     <>
@@ -28,8 +28,10 @@ function App() {
       </div>
       
       <div className='border border-dashed border-pink-700 p-5 rounded-lg space-y-10'>
-          <OrderComponent 
-            order={order} 
+        {order.length > 0 ? (
+          <>
+          <OrderComponent
+            order={order}
             removeFromOrder={removeFromOrder}
           />
 
@@ -40,7 +42,12 @@ function App() {
           <OrderTotals 
             order={order}
             tip={tip}
+            placeOrder={placeOrder}
           />
+          </>
+        ) : (
+          <p className="text-center">No hay items en la orden</p>
+        )}
       </div>
     </main>
     </>

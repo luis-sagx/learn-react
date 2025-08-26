@@ -22,11 +22,16 @@ export default function useOrder() {
     setOrder((prevOrder) => prevOrder.filter((i) => i.id !== id))
   }
 
+  const placeOrder = () => {
+    alert('Orden colocada con éxito')
+  }
+
   return {
     order,
     tip,
     setTip,
     addToOrder,
-    removeFromOrder
+    removeFromOrder,
+    placeOrder
   }
 }

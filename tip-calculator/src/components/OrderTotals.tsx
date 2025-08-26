@@ -4,9 +4,10 @@ import type { OrderItem } from "../types"
 type OrderTotalProps = {
     order: OrderItem[]
     tip: number
+    placeOrder: () => void
 }
 
-export default function OrderTotals({ order, tip }: OrderTotalProps) {
+export default function OrderTotals({ order, tip, placeOrder }: OrderTotalProps) {
 
     const subtotalAmount = useMemo(() => order.reduce((acc, item) => acc + item.price * item.quantity, 0), [order])
     const tipAmount = useMemo(() => subtotalAmount * (tip / 100), [subtotalAmount, tip])
@@ -20,8 +21,12 @@ export default function OrderTotals({ order, tip }: OrderTotalProps) {
             <p>Propina ({tip}%): <strong>${tipAmount}</strong></p>
             <p>Total: <strong>${totalAmount}</strong></p>
         </div>
-        <button>
-
+        <button 
+            className="w-full bg-indigo-500 text-white py-2 rounded-lg hover:bg-indigo-600 disabled:opacity-50 disabled:cursor-not-allowed font-semibold mt-5"
+            disabled={order.length === 0}
+            onClick={() => placeOrder()}
+        >
+            Guardar Orden
         </button>
     </>
   )
