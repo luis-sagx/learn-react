@@ -1,15 +1,24 @@
-import categories from "../data/categories";
+import { categories } from "../data/categories";
+import { v4 as uuidv4 } from 'uuid'
 import { useState } from "react";
-import type { ChangeEvent } from "react";
+import type { ChangeEvent, Dispatch, FormEvent } from "react";
 import type { Activity } from "../types";
+import type { ActivityActions } from "../reducers/activity-reducer";
 
-export default function Form() {
+type FormProps = {
+    dispatch: Dispatch<ActivityActions>
+}
 
-    const [activity, setActivity] = useState<Activity>({
+export default function Form({dispatch}: FormProps) {
+
+    const initialState : Activity = {
+        id: uuidv4(),
         category: 1,
         nameActivity: '',
-        calories: 0
-    })
+        calories: 0   
+    }
+    
+    const [activity, setActivity] = useState<Activity>(initialState)
 
     const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
         const isNumberField = ['category', 'calories'].includes(e.target.id);
@@ -26,10 +35,22 @@ export default function Form() {
         return nameActivity.trim() !== '' && calories > 0;
     }
 
+    const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+        e.preventDefault()
+
+        dispatch({type : "save-activity", payload: {newActivity: activity}})
+
+        setActivity({
+            ...initialState,
+            id: uuidv4()
+        })
+    }
+
   return (
     <>
         <form 
         className="p-10 space-y-5 bg-white shadow-lg rounded-xl"
+        onSubmit={handleSubmit}
         >
             <div className="grid grid-cols-1 gap-3">
                 <label htmlFor="category" className="font-bold">Categorias:</label>
@@ -79,10 +100,10 @@ export default function Form() {
             </div>
 
             <input 
+            className="w-full p-3 font-bold text-white transition-all duration-200 transform rounded-lg cursor-pointer bg-emerald-600 hover:bg-emerald-700 hover:shadow-lg hover:scale-105 disabled:cursor-not-allowed disabled:opacity-70" 
             disabled={!isValidActivity()}
             type="submit" 
             value={activity.category === 1 ? 'Agregar comida' : 'Agregar ejercicio'}
-            className="w-full p-3 font-bold text-white transition-all duration-200 transform rounded-lg cursor-pointer bg-emerald-600 hover:bg-emerald-700 hover:shadow-lg hover:scale-105 disabled:cursor-not-allowed disabled:opacity-70" 
             />
 
         </form>

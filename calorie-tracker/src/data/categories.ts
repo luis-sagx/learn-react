@@ -1,8 +1,6 @@
-import type { Category } from "../assets/types";
+import type { Category } from "../types";
 
-const categories: Category[] = [
+export const categories: Category[] = [
     {id:1, name: "Comida"},
     {id:2, name: "Ejercicio"}
 ]
-
-export default categories;
