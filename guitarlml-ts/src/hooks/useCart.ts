@@ -1,5 +1,5 @@
-import { useState, useEffect, useMemo } from 'react'
-import type { CartItem, Guitar, GuitarID } from '../types';
+import { useState, useEffect } from 'react'
+import type { CartItem, GuitarID } from '../types';
 
 
 export const useCart = () => {
@@ -28,9 +28,9 @@ export const useCart = () => {
     //     }
     // }
 
-    const removeFromCart = (id: GuitarID): void => {
-        setCart(prevCart => prevCart.filter(guitar => guitar.id !== id))    
-    }
+    // const removeFromCart = (id: GuitarID): void => {
+    //     setCart(prevCart => prevCart.filter(guitar => guitar.id !== id))    
+    // }
 
     const increaseQuantity = (id: GuitarID): void => {
         const updateCart = cart.map((item: CartItem) => {
@@ -57,17 +57,17 @@ export const useCart = () => {
     }
 
     //state derivado 
-    const isEmpty = useMemo(() => cart.length === 0, [cart])
-    const getTotal = useMemo(() => cart.reduce((total, item) => total + (item.price * item.quantity), 0), [cart])
+    // const isEmpty = useMemo(() => cart.length === 0, [cart])
+    // const getTotal = useMemo(() => cart.reduce((total, item) => total + (item.price * item.quantity), 0), [cart])
     
     return {
         cart,
         //addToCart,
-        removeFromCart,
+        //removeFromCart,
         increaseQuantity,
         decreaseQuantity,
         cleanCart, 
-        isEmpty, 
-        getTotal
+        //isEmpty, 
+        //getTotal
     }
 };
