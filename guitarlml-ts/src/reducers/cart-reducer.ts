@@ -53,18 +53,33 @@ export const cartReducer = (state: CartState = initialState, action: CartAction)
         }
     }
     if(action.type === "decrease-quantity"){
+        const updateCart = state.cart.map((item: CartItem) => {
+            if (item.id === action.payload.id && item.quantity > MIN_ITEMS) {
+                return { ...item, quantity: item.quantity - 1 }
+            }
+            return item
+        })
         return{ 
-            ...state
+            ...state,
+            cart: updateCart
         }
     }
     if(action.type === "increase-quantity"){
+        const updateCart = state.cart.map((item: CartItem) => {
+            if (item.id === action.payload.id && item.quantity < 10) {
+                return { ...item, quantity: item.quantity + 1 }
+            }
+            return item
+        })
         return{ 
-            ...state
+            ...state,
+            cart: updateCart
         }
     }
     if(action.type === "clear-cart"){
         return{ 
-            ...state
+            ...state,
+            cart: []
         }
     }
 
