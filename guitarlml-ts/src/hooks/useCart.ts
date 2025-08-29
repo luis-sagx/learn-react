@@ -1,21 +1,8 @@
-import { db } from '../data/db'
 import { useState, useEffect, useMemo } from 'react'
 import type { CartItem, Guitar, GuitarID } from '../types';
 
-// Definir el tipo de retorno del hook
-interface UseCartReturn {
-    data: Guitar[];
-    cart: CartItem[];
-    addToCart: (item: Guitar) => void;
-    removeFromCart: (id: GuitarID) => void;
-    increaseQuantity: (id: GuitarID) => void;
-    decreaseQuantity: (id: GuitarID) => void;
-    cleanCart: () => void;
-    isEmpty: boolean;
-    getTotal: number;
-}
 
-export const useCart = (): UseCartReturn => {
+export const useCart = () => {
     // Función para obtener el carrito inicial desde localStorage con tipo seguro
     const getInitialCart = (): CartItem[] => {
         const cartData = localStorage.getItem('cart');
@@ -23,30 +10,23 @@ export const useCart = (): UseCartReturn => {
     };
 
     const initialCart = getInitialCart();
-
-    const [data, setData] = useState<Guitar[]>([])
     const [cart, setCart] = useState<CartItem[]>(initialCart)
-
-
-    useEffect(() => {
-        setData(db)
-    }, [])
 
     useEffect(() => {
         localStorage.setItem('cart', JSON.stringify(cart))
     }, [cart])
 
-    const addToCart = (item: Guitar): void => {
-        const itemExists = cart.findIndex((cartItem: CartItem) => cartItem.id === item.id)
-        if (itemExists >= 0) {
-            const updateCart = [...cart]
-            updateCart[itemExists].quantity++
-            setCart(updateCart)
-        } else {
-            const newCartItem: CartItem = { ...item, quantity: 1 };
-            setCart([...cart, newCartItem])
-        }
-    }
+    // const addToCart = (item: Guitar): void => {
+    //     const itemExists = cart.findIndex((cartItem: CartItem) => cartItem.id === item.id)
+    //     if (itemExists >= 0) {
+    //         const updateCart = [...cart]
+    //         updateCart[itemExists].quantity++
+    //         setCart(updateCart)
+    //     } else {
+    //         const newCartItem: CartItem = { ...item, quantity: 1 };
+    //         setCart([...cart, newCartItem])
+    //     }
+    // }
 
     const removeFromCart = (id: GuitarID): void => {
         setCart(prevCart => prevCart.filter(guitar => guitar.id !== id))    
@@ -81,9 +61,8 @@ export const useCart = (): UseCartReturn => {
     const getTotal = useMemo(() => cart.reduce((total, item) => total + (item.price * item.quantity), 0), [cart])
     
     return {
-        data,
         cart,
-        addToCart,
+        //addToCart,
         removeFromCart,
         increaseQuantity,
         decreaseQuantity,
