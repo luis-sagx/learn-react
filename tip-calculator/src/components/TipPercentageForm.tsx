@@ -1,8 +1,11 @@
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+import type { Dispatch } from 'react'
+import type { OrderAction } from '../reducers/order-reducer'
 
 type TipPercentageFormProps = {
-    setTip: (tip: number) => void
+    dispatch: Dispatch<OrderAction>
+    tip: number
 }
 
 const tipOptions = [
@@ -13,23 +16,46 @@ const tipOptions = [
     { id: 'tip-custom', label: 'Personalizado', value: 'custom' }
 ]
 
-export default function TipPercentageForm({setTip }: TipPercentageFormProps ) {
+export default function TipPercentageForm({ dispatch, tip }: TipPercentageFormProps ) {
   const [selectedTip, setSelectedTip] = useState('')
+  const [customTipValue, setCustomTipValue] = useState('')
+
+  // Sincronizar el selectedTip con el valor actual del tip
+  useEffect(() => {
+    if (tip === 0) {
+      setSelectedTip('')
+      setCustomTipValue('')
+    } else {
+      // Verificar si el tip coincide con alguna opción predefinida
+      const predefinedOption = tipOptions.find(option => 
+        typeof option.value === 'number' && option.value === tip
+      )
+      
+      if (predefinedOption) {
+        setSelectedTip(predefinedOption.id)
+        setCustomTipValue('')
+      } else {
+        // Es un valor personalizado
+        setSelectedTip('tip-custom')
+        setCustomTipValue(tip.toString())
+      }
+    }
+  }, [tip])
 
   const handleTipChange = (tipId: string, tipValue: number | string) => {
     setSelectedTip(tipId)
     if (typeof tipValue === 'number') {
-      setTip(tipValue)
+      dispatch({ type: 'ADD_TIP', payload: { value: tipValue } })
     }
   }
 
   const handleCustomTipChange = (customValue: string) => {
     const numericValue = parseInt(customValue)
     if (!isNaN(numericValue) && numericValue >= 1 && numericValue <= 100) {
-      setTip(numericValue)
+      dispatch({ type: 'ADD_TIP', payload: { value: numericValue } })
     } else if (customValue === '') {
       // Si el campo está vacío, resetear a 0
-      setTip(0)
+      dispatch({ type: 'ADD_TIP', payload: { value: 0 } })
     }
   }
 
@@ -67,8 +93,12 @@ export default function TipPercentageForm({setTip }: TipPercentageFormProps ) {
                             min="1" 
                             max="100" 
                             placeholder="Porcentaje"
+                            value={customTipValue}
                             className="ml-2 border-b border-gray-300 px-2 py-1 w-28"
-                            onChange={(e) => handleCustomTipChange(e.target.value)}
+                            onChange={(e) => {
+                              setCustomTipValue(e.target.value)
+                              handleCustomTipChange(e.target.value)
+                            }}
                             onKeyDown={handleKeyDown}
                         />
                     )}

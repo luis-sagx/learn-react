@@ -1,13 +1,19 @@
 import { menuItems } from './data/bd'
 import MenuItem from './components/MenuItem'
-import useOrder from './hooks/useOrder'
 import './App.css'
 import OrderComponent from './components/OrderComponent'
 import OrderTotals from './components/OrderTotals'
 import TipPercentageForm from './components/TipPercentageForm'
+import { initialState, orderReducer, saveToLocalStorage } from './reducers/order-reducer'
+import { useReducer, useEffect } from 'react'
 
 function App() {
-  const { order, addToOrder, removeFromOrder, tip, setTip, placeOrder } = useOrder()
+  const [state, dispatch] = useReducer(orderReducer, initialState)
+
+  // Guardar en localStorage cada vez que cambie el estado
+  useEffect(() => {
+    saveToLocalStorage(state);
+  }, [state]);
 
   return (
     <>
@@ -20,29 +26,31 @@ function App() {
         <div className='my-5 spapace-y-3'>
           {menuItems.map(item => (
             <MenuItem
-              key={item.id} item={item}
-              addToOrder={addToOrder}
+              key={item.id} 
+              item={item}
+              dispatch={dispatch}
             />
           ))}
         </div>
       </div>
       
       <div className='border border-dashed border-pink-700 p-5 rounded-lg space-y-10'>
-        {order.length > 0 ? (
+        {state.order.length > 0 ? (
           <>
           <OrderComponent
-            order={order}
-            removeFromOrder={removeFromOrder}
+            order={state.order}
+            dispatch={dispatch}
           />
 
           <TipPercentageForm 
-            setTip={setTip}
+            dispatch={dispatch}
+            tip={state.tip}
           />
 
           <OrderTotals 
-            order={order}
-            tip={tip}
-            placeOrder={placeOrder}
+            order={state.order}
+            tip={state.tip}
+            dispatch={dispatch}
           />
           </>
         ) : (

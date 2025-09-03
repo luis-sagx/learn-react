@@ -1,11 +1,13 @@
-import type { Menu, OrderItem } from '../types'
+import type { OrderAction } from '../reducers/order-reducer'
+import type { OrderItem } from '../types'
+import type { Dispatch } from 'react'
 
 type OrderComponentProps = {
   order: OrderItem[]
-  removeFromOrder: (id: Menu['id']) => void
+  dispatch: Dispatch<OrderAction>
 }
 
-export default function OrderComponent({ order, removeFromOrder }: OrderComponentProps) {
+export default function OrderComponent({ order, dispatch }: OrderComponentProps) {
   return (
     <div>
         <h2 className="font-bold text-pink-800 text-2xl">Consumo</h2>
@@ -27,7 +29,7 @@ export default function OrderComponent({ order, removeFromOrder }: OrderComponen
                   </div>
                   <button 
                     className='h-10 w-10 rounded-full bg-pink-800 text-white px-3 py-1 mt-2 hover:bg-pink-900 font-bold hover:scale-105 transition-transform'
-                    onClick={() => removeFromOrder(item.id)}
+                    onClick={() => dispatch({ type: "REMOVE_ITEM", payload: item.id })}
                   >
                     <i className="fa-solid fa-trash"></i>
                   </button>
